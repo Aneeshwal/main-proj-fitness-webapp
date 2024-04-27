@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exercise Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        #header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #main-container {
+            display: flex;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #video-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin-top: 60px;
+        }
+
+        #video {
+            max-width: 100%; 
+            border: 5px solid #333;
+        }
+
+        #prediction-container {
+            max-width: 400px;
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            margin-right: 110px;
+            max-height: 300px;
+            margin-top: 50px;
+        }
+        
+
+        #prediction-container p {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        form {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        margin-bottom: 60px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0px 0px 10px #888;
+        }
+        button:hover {
+            background-color: #3e8e41;
+        }
+        .flash-message {
+            background-color: #ffddcc;
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>Exercise Counter</h1>
+    </div>
+
+    <div id="main-container">
+        <div id="video-container">
+            <img id="video" src="{{ url_for('video_feed_exercise') }}" style="width:400px;height:300px;">
+        </div>
+
+        <div id="prediction-container">
+            <p id="letter">Current Exercise: </p>
+            <p id="word">Count: </p>
+            <p id="flag"> </p>
+        </div>
+    </div>
+    <div id="flash-message-container"></div>
+    <form action="{{ url_for('stop') }}">
+        <button type="submit">STOP</button>
+    </form>
+
+    <script>
+        function fetchData() {
+            fetch("/fetch_data")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("letter").textContent = "Current Exercise: " + data.letter;
+                    document.getElementById("word").textContent = "count: " + data.word;
+                    
+                    
+                    if (data_yoga.flag != 2 && data_yoga.flag != 1 && data_yoga.flag != 0) {
+                        
+                        document.getElementById("flag").textContent = "Warning!!! " + data.flag;
+                    }
+                    if (data.flag == 1) {
+                        showFlashMessage("Exercise completed...Start next");
+                    }else {
+                        hideFlashMessage();
+                    }
+                    
+                })
+                .catch(error => {
+                    console.log("Error:", error);
+                });
+        }
+
+        function updateVideoFeed() {
+            document.getElementById("video").src = "{{ url_for('video_feed_exercise') }}";
+            fetchData();
+        }
+        function showFlashMessage(message) {
+            const flashMessageContainer = document.getElementById("flash-message-container");
+            flashMessageContainer.innerHTML = `<div class="flash-message">${message}</div>`;
+        }
+
+        function hideFlashMessage() {
+            const flashMessageContainer = document.getElementById("flash-message-container");
+            flashMessageContainer.innerHTML = "";
+        }
+
+        setInterval(updateVideoFeed, 1000);
+    </script>
+</body>
+</html>

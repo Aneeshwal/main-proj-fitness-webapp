@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exercise Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        #header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #main-container {
+            display: flex;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #video-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #video {
+            max-width: 100%; 
+            border: 5px solid #333;
+        }
+
+        #prediction-container {
+            max-width: 400px;
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            margin-right: 110px;
+            max-height: 400px;
+            margin-top: 50px;
+        }
+        
+
+        #prediction-container p {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        #end-call-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+        #button-container {
+            
+            align-items: center;
+            margin-left: 450px;
+
+        }
+
+        #end-call-btn:hover {
+            background-color: #c9302c;
+
+        }
+        .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .image-container {
+        flex-basis: 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1px;
+      }
+      .image-container img {
+        max-width: 55%;
+        height: auto;
+    
+      }
+      .video-container {
+        flex-basis: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1px;
+      }
+      video {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        box-shadow: 0px 0px 20px #888;
+      }
+      form {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0px 0px 10px #888;
+      }
+      button:hover {
+        background-color: #3e8e41;
+      }
+      .note {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 18px;
+        color: #fff;
+        text-align: right;
+      }
+      .footnote {
+        text-align: center;
+        font-size: 12px;
+        color: #999;
+        margin-top: 50px;
+      }
+    .flash-message {
+        background-color: #ffddcc;
+        color: #333;
+        padding: 10px;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 40px;
+    }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <!-- <a href="#">Contact</a> -->
+      </div>
+      <div class="note">Note: Press the "Report" button only after the video is complete.</div>
+      <h1>Start Yoga</h1>
+      
+        <p id="letter">Current pose: </p>
+        <p id="word">Count: </p>
+        <p id="flag"> </p>
+   
+    <div id="flash-message-container"></div>
+      <div class="container">
+        <div class="image-container">
+          <img src="static/images/1.jpeg" />
+        </div>
+        <div id="video-container">
+          <img  id="video" src="{{ url_for('video_feed_yoga') }}" />
+        </div>
+        <div class="image-container">
+          <img src="static/images/2.jpeg" />
+        </div>
+      </div>
+      <form action="{{ url_for('stop') }}">
+        <button type="submit">STOP</button>
+      </form>
+
+    <script>
+        function fetchData() {
+            fetch("/fetch_data_yoga")
+                .then(response => response.json())
+                .then(data_yoga => {
+                    document.getElementById("letter").textContent = "Current Pose: " + data_yoga.letter;
+                    document.getElementById("word").textContent = "count: " + data_yoga.word;
+                    document.getElementById("flag").textContent =  "Warning: " + data_yoga.flag;
+                   
+                    if (data_yoga.flag == 1) {
+                        showFlashMessage("Exercise completed...Start next");
+                    } else if (data_yoga.flag == 2) {
+                        showFlashMessage("Finished please press the stop button");
+                    } else if (data_yoga.flag == 0) {
+                        hideFlashMessage();
+                    }
+                })
+                .catch(error => {
+                    console.log("Error:", error);
+                });
+        }
+
+        function updateVideoFeed() {
+            document.getElementById("video").src = "{{ url_for('video_feed_yoga') }}";
+            fetchData();
+        }
+        function showFlashMessage(message) {
+            const flashMessageContainer = document.getElementById("flash-message-container");
+            flashMessageContainer.innerHTML = `<div class="flash-message">${message}</div>`;
+        }
+
+        function hideFlashMessage() {
+            const flashMessageContainer = document.getElementById("flash-message-container");
+            flashMessageContainer.innerHTML = "";
+        }
+
+        setInterval(updateVideoFeed, 1000);
+    </script>
+</body>
+</html>

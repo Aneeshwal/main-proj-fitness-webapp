@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diet Chart</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .day-container {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .day-heading {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 20px 10px;
+            text-align: center;
+            flex-basis: 100px; /* Set the width of the day-heading */
+            flex-shrink: 0;
+            transform: rotate(-90deg); /* Rotate the day-heading */
+            transform-origin: left top; /* Set the rotation origin */
+        }
+
+        table {
+            flex-grow: 1; /* Expand the table to fill the remaining space */
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f7f7f7;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        td {
+            line-height: 1.6;
+        }
+
+        /* Hide the table header (th) */
+        table th {
+            display: none;
+        }
+
+        /* Add borders to the left of td elements to represent columns */
+        td:nth-child(1) {
+            border-left: 2px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Diet Chart</h1>
+
+    <!-- Day 1: Monday -->
+    <div class="day-container">
+        <div class="day-heading">Monday</div>
+        <table>
+            <tr>
+                <td>Breakfast</td>
+                <td>Scrambled Eggs</td>
+            </tr>
+            <tr>
+                <td>Lunch</td>
+                <td>Grilled Chicken Salad</td>
+            </tr>
+            <tr>
+                <td>Dinner</td>
+                <td>Baked Salmon with Veggies</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Day 2: Tuesday -->
+    <div class="day-container">
+        <div class="day-heading">Tuesday</div>
+        <table>
+            <tr>
+                <td>Breakfast</td>
+                <td>Yogurt with Berries</td>
+            </tr>
+            <!-- Add food items for Tuesday here -->
+            <!-- ... -->
+        </table>
+    </div>
+
+    <!-- Add similar "day-container" divs for the remaining days (Wednesday to Sunday) and update the content accordingly -->
+    <!-- ... -->
+
+</body>
+</html>
